@@ -1,9 +1,9 @@
 variable "project_prefix" { type = string }
-variable "environment"    { type = string }
+variable "environment" { type = string }
 variable "private_subnet_ids" { type = list(string) }
-variable "instance_type"  { type = string }
-variable "alb_sg_id"      { type = string }
-variable "ec2_sg_id"      { type = string }
+variable "instance_type" { type = string }
+variable "alb_sg_id" { type = string }
+variable "ec2_sg_id" { type = string }
 variable "user_data_env_label" { type = string }
 variable "lb_target_group_arn" { type = string }
 
@@ -22,9 +22,9 @@ resource "aws_iam_role" "ec2_role" {
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [{
-      Effect = "Allow",
+      Effect    = "Allow",
       Principal = { Service = "ec2.amazonaws.com" },
-      Action = "sts:AssumeRole"
+      Action    = "sts:AssumeRole"
     }]
   })
 }
@@ -35,9 +35,9 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 }
 
 resource "aws_launch_template" "lt" {
-  name_prefix   = "${var.project_prefix}-${var.environment}-lt-"
-  image_id      = data.aws_ami.amazonlinux.id
-  instance_type = var.instance_type
+  name_prefix            = "${var.project_prefix}-${var.environment}-lt-"
+  image_id               = data.aws_ami.amazonlinux.id
+  instance_type          = var.instance_type
   vpc_security_group_ids = [var.ec2_sg_id]
 
   user_data = base64encode(<<EOT
@@ -83,7 +83,7 @@ resource "aws_autoscaling_group" "asg" {
 # Attach the ASG to the ALB Target Group so traffic reaches instances
 resource "aws_autoscaling_attachment" "asg_to_tg" {
   autoscaling_group_name = aws_autoscaling_group.asg.name
-  lb_target_group_arn   = var.lb_target_group_arn
+  lb_target_group_arn    = var.lb_target_group_arn
 }
 
 output "asg_name" {

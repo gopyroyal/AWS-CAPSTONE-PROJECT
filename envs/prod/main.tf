@@ -29,24 +29,24 @@ module "alb" {
 }
 
 module "ec2" {
-  source                = "../../modules/ec2"
-  project_prefix        = var.project_prefix
-  environment           = var.environment
-  private_subnet_ids    = module.vpc.private_subnet_ids
-  instance_type         = "t3.micro"
-  alb_sg_id             = module.security_groups.alb_sg_id
-  ec2_sg_id             = module.security_groups.ec2_sg_id
-  user_data_env_label   = upper(var.environment)
-  lb_target_group_arn  = module.alb.tg_arn
+  source              = "../../modules/ec2"
+  project_prefix      = var.project_prefix
+  environment         = var.environment
+  private_subnet_ids  = module.vpc.private_subnet_ids
+  instance_type       = "t3.micro"
+  alb_sg_id           = module.security_groups.alb_sg_id
+  ec2_sg_id           = module.security_groups.ec2_sg_id
+  user_data_env_label = upper(var.environment)
+  lb_target_group_arn = module.alb.tg_arn
 }
 
 module "rds" {
-  source                = "../../modules/rds"
-  project_prefix        = var.project_prefix
-  environment           = var.environment
-  private_subnet_ids    = module.vpc.private_subnet_ids
-  rds_sg_id             = module.security_groups.rds_sg_id
-  db_engine_version     = "15.5"
-  instance_class        = "db.t4g.micro"
-  allocated_storage     = 20
+  source             = "../../modules/rds"
+  project_prefix     = var.project_prefix
+  environment        = var.environment
+  private_subnet_ids = module.vpc.private_subnet_ids
+  rds_sg_id          = module.security_groups.rds_sg_id
+  db_engine_version  = "15.5"
+  instance_class     = "db.t4g.micro"
+  allocated_storage  = 20
 }
