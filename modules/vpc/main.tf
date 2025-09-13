@@ -1,12 +1,12 @@
 variable "project_prefix" { type = string }
-variable "environment"    { type = string }
-variable "region"         { type = string }
-variable "azs"            { type = list(string) }
-variable "cidr_block"     { type = string }
-variable "public_subnet_cidrs"  { type = list(string) }
+variable "environment" { type = string }
+variable "region" { type = string }
+variable "azs" { type = list(string) }
+variable "cidr_block" { type = string }
+variable "public_subnet_cidrs" { type = list(string) }
 variable "private_subnet_cidrs" { type = list(string) }
 variable "single_nat_gateway" {
-  type = bool
+  type    = bool
   default = true
 }
 
@@ -16,7 +16,7 @@ resource "aws_vpc" "this" {
   enable_dns_support   = true
   enable_dns_hostnames = true
   tags = {
-    Name = "${var.project_prefix}-${var.environment}-vpc"
+    Name        = "${var.project_prefix}-${var.environment}-vpc"
     Environment = var.environment
   }
 }
@@ -29,7 +29,7 @@ resource "aws_internet_gateway" "igw" {
 }
 
 resource "aws_subnet" "public" {
-  for_each = zipmap(var.azs, var.public_subnet_cidrs)
+  for_each                = zipmap(var.azs, var.public_subnet_cidrs)
   vpc_id                  = aws_vpc.this.id
   cidr_block              = each.value
   availability_zone       = each.key
@@ -41,7 +41,7 @@ resource "aws_subnet" "public" {
 }
 
 resource "aws_subnet" "private" {
-  for_each = zipmap(var.azs, var.private_subnet_cidrs)
+  for_each          = zipmap(var.azs, var.private_subnet_cidrs)
   vpc_id            = aws_vpc.this.id
   cidr_block        = each.value
   availability_zone = each.key
@@ -52,7 +52,7 @@ resource "aws_subnet" "private" {
 }
 
 resource "aws_eip" "nat" {
-  count = var.single_nat_gateway ? 1 : length(var.azs)
+  count  = var.single_nat_gateway ? 1 : length(var.azs)
   domain = "vpc"
   tags = {
     Name = "${var.project_prefix}-${var.environment}-nat-eip-${count.index}"
@@ -60,7 +60,7 @@ resource "aws_eip" "nat" {
 }
 
 resource "aws_nat_gateway" "nat" {
-  count = var.single_nat_gateway ? 1 : length(var.azs)
+  count         = var.single_nat_gateway ? 1 : length(var.azs)
   allocation_id = aws_eip.nat[count.index].id
   subnet_id     = values(aws_subnet.public)[0].id
   tags = {

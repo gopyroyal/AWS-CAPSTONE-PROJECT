@@ -32,7 +32,7 @@ jobs:
           aws-region: ca-central-1
 
       - name: Terraform Fmt
-        run: terraform -chdir=envs/${{ matrix.env }} fmt -check
+        run: terraform fmt -check -recursive -diff
 
       - name: Terraform Init
         run: terraform -chdir=envs/${{ matrix.env }} init -upgrade

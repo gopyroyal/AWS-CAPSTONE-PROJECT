@@ -22,8 +22,8 @@ resource "aws_security_group" "alb" {
 }
 
 resource "aws_security_group" "ec2" {
-  name        = "ec2-sg"
-  vpc_id      = var.vpc_id
+  name   = "ec2-sg"
+  vpc_id = var.vpc_id
 
   ingress {
     from_port       = 80
