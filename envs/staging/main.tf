@@ -46,7 +46,7 @@ module "rds" {
   environment        = var.environment
   private_subnet_ids = module.vpc.private_subnet_ids
   rds_sg_id          = module.security_groups.rds_sg_id
-  db_engine_version  = "15.5"
+  db_engine_version     = "15.7"
   instance_class     = "db.t4g.micro"
   allocated_storage  = 20
 }
